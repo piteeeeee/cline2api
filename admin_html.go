@@ -949,11 +949,38 @@ textarea{resize:vertical;min-height:88px;font-family:ui-monospace,'SF Mono','Cas
           <div>
             <div style="font-weight:600;color:var(--text)">配置客户端</div>
             <div style="font-size:13px;color:var(--text2);margin-top:2px">在 Claude Code、Cline 等客户端中设置：</div>
-            <div style="font-family:ui-monospace,monospace;font-size:12px;background:var(--surface2);padding:8px 12px;border-radius:6px;margin-top:6px;color:var(--text2)">
+            <div class="mono" style="background:var(--surface2);padding:8px 12px;border-radius:6px;margin-top:6px;color:var(--text2);overflow-wrap:anywhere">
               Base URL: http://127.0.0.1:3457/v1<br>
               API Key: &lt;生成的密钥&gt;<br>
-              Model: cline-free/glm-5.2
+              Model: cline-free/deepseek-v4.1-flash
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">接入指引</div>
+    <div class="section-body">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div>
+          <div style="font-weight:600;color:var(--text)">监听地址</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:2px">默认监听 127.0.0.1:3457。客户端 Base URL 取当前面板地址加 /v1，见下方示例。</div>
+        </div>
+        <div>
+          <div style="font-weight:600;color:var(--text)">密钥池</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:2px">密钥池为空时完全放行，任何请求都不鉴权。一旦在「密钥与安全」里生成了密钥，所有请求必须带 x-api-key 或 Authorization: Bearer，否则返回 401。</div>
+        </div>
+        <div class="warn-box" style="margin-top:0">如果用另一个网关或程序调用本代理，生成密钥后必须去那边同步配置出站密钥，否则那边所有请求会 401。本代理的 /v1/health 免鉴权，所以那边的「在线」探测不会发现这个问题。</div>
+        <div>
+          <div style="font-weight:600;color:var(--text)">配置客户端</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:2px">兼容 OpenAI 与 Anthropic 两种 API 格式。</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:2px">在 Claude Code、Cline 等客户端中设置：</div>
+          <div class="mono" style="background:var(--surface2);padding:8px 12px;border-radius:6px;margin-top:6px;color:var(--text2);overflow-wrap:anywhere">
+            Base URL: <span id="onboardBaseURL">http://127.0.0.1:3457/v1</span><br>
+            API Key: &lt;生成的密钥&gt;<br>
+            Model: cline-free/deepseek-v4.1-flash
           </div>
         </div>
       </div>
@@ -1136,6 +1163,12 @@ const I18N = {
   '前往「密钥与安全」页面生成密钥。如不配置任何密钥，代理允许匿名访问。': 'Generate a key in Keys & Security. With no keys, the proxy allows anonymous access.',
   '配置客户端': 'Configure your client',
   '在 Claude Code、Cline 等客户端中设置：': 'Configure in clients like Claude Code or Cline:',
+  '接入指引': 'Connecting a Client',
+  '默认监听 127.0.0.1:3457。客户端 Base URL 取当前面板地址加 /v1，见下方示例。': 'Listens on 127.0.0.1:3457 by default. The client Base URL is this panel address plus /v1, shown in the example below.',
+  '密钥池': 'Key Pool',
+  '密钥池为空时完全放行，任何请求都不鉴权。一旦在「密钥与安全」里生成了密钥，所有请求必须带 x-api-key 或 Authorization: Bearer，否则返回 401。': 'An empty key pool lets every request through with no authentication. Once a key is generated under Keys & Security, every request must send x-api-key or Authorization: Bearer, or the proxy returns 401.',
+  '如果用另一个网关或程序调用本代理，生成密钥后必须去那边同步配置出站密钥，否则那边所有请求会 401。本代理的 /v1/health 免鉴权，所以那边的「在线」探测不会发现这个问题。': 'If another gateway or program calls this proxy, generating a key here means you must set the same outbound key on that side, or all of its requests return 401. /v1/health on this proxy does not require a key, so an upstream online check will not notice.',
+  '兼容 OpenAI 与 Anthropic 两种 API 格式。': 'Compatible with both OpenAI and Anthropic API formats.',
   '功能特性': 'Features',
   '✅ 多账号轮询（轮询/填满/随机）': '✅ Multi-account rotation (round robin / fill / random)',
   '✅ OpenAI & Anthropic 双协议': '✅ OpenAI & Anthropic dual protocol',
@@ -2899,8 +2932,15 @@ async function loadRequestLogs(reset) {
   } catch (e) { toast(t('加载日志失败: ') + e.message, 'error'); }
 }
 
+function fillOnboardBaseURL(){
+  const el = _('onboardBaseURL');
+  if (!el || !location.origin || location.origin === 'null') return;
+  el.textContent = location.origin + '/v1';
+}
+
 // ========== 初始化 ==========
 applyLang();
+fillOnboardBaseURL();
 loadStats();
 loadAccounts();
 loadKeys();

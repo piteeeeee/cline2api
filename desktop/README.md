@@ -17,7 +17,7 @@
 3. 客户端使用本机地址：
    - Base URL：`http://127.0.0.1:3457/v1`
    - API Key：在管理后台生成
-   - Model：如 `cline-free/glm-5.2`
+   - Model：如 `cline-free/deepseek-v4.1-flash`
 4. 关闭桌面窗口会终止整个程序和本地代理。
 
 程序默认仅监听 `127.0.0.1`，不会将管理后台开放到局域网或公网。

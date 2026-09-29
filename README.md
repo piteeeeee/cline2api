@@ -84,7 +84,7 @@ docker compose down        # 停止
 ```
 Base URL: http://127.0.0.1:3457/v1
 API Key:  <在管理后台生成的 Key>
-Model:    cline-free/glm-5.2
+Model:    cline-free/deepseek-v4.1-flash
 ```
 
 兼容 OpenAI 和 Anthropic 两种 API 格式。
@@ -196,7 +196,7 @@ git push origin v1.0.0
 - 默认模型可在「代理配置 → 默认模型」下拉中设置；未设置时自动回退到第一个免费模型
 
 > 内置 fallback 模型（离线/同步失败时兜底）：
-> `cline-free/glm-5.2`、`cline-pass/glm-5.2`、`cline-pass/deepseek-v4-flash`、`cline-pass/qwen3.7-max`、`deepseek/deepseek-v4-flash`、`poolside/laguna-s-2.1:free`
+> `z-ai/glm-5.3-flash`、`cline-free/longcat-2.0`、`cline-pass/glm-5.2`、`cline-pass/deepseek-v4-flash`、`cline-pass/qwen3.7-max`、`deepseek/deepseek-v4-flash`、`poolside/laguna-s-2.1:free`
 
 ## 项目结构
 
